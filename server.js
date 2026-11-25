@@ -58,7 +58,7 @@ const FALLBACK_TIMEOUT = 8000;
 const IMAGE_TIMEOUT = 120000;
 
 const ROOT = __dirname;
-const PUBLIC_DIR = path.join(ROOT, "public");
+const PUBLIC_DIR = ROOT;
 const DATA_DIR = process.env.DATA_DIR || "/tmp/nano-ai-data";
 
 const MEMORY_FILE = path.join(DATA_DIR, "memory.json");
@@ -116,7 +116,21 @@ app.use(express.urlencoded({
   limit: "30mb"
 }));
 
-app.use(express.static(PUBLIC_DIR));
+app.get("/style.css", (req, res) => {
+  res.sendFile(path.join(ROOT, "style.css"));
+});
+
+app.get("/app.js", (req, res) => {
+  res.sendFile(path.join(ROOT, "app.js"));
+});
+
+app.get("/nova-logo.svg", (req, res) => {
+  res.sendFile(path.join(ROOT, "nova-logo.svg"));
+});
+
+app.get("/nano-mark.png", (req, res) => {
+  res.sendFile(path.join(ROOT, "nano-mark.png"));
+});
 
 app.get("/landing", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "landing", "index.html"));
@@ -1178,7 +1192,7 @@ app.post("/api/image", async (req, res) => {
 // HOME
 app.get("/", (req, res) => {
   res.sendFile(
-    path.join(PUBLIC_DIR, "index.html")
+    path.join(ROOT, "index.html")
   );
 });
 
