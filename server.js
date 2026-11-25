@@ -59,7 +59,7 @@ const IMAGE_TIMEOUT = 120000;
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, "public");
-const DATA_DIR = path.join(ROOT, "data");
+const DATA_DIR = process.env.DATA_DIR || "/tmp/nano-ai-data";
 
 const MEMORY_FILE = path.join(DATA_DIR, "memory.json");
 const USAGE_FILE = path.join(DATA_DIR, "usage.json");
