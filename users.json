@@ -1,0 +1,24 @@
+[
+  {
+    "id": "usr_demo",
+    "name": "Pengguna Gemini",
+    "username": "demo",
+    "email": "demo@gemini.local",
+    "passwordHash": "d182b38bb8ad1bee5bb15abdf37147fafb8cb12d9054964a951194415fc702dd09c54fc50255317024e03d70dc4b879a6f6ddc51ddbe09de9b9e81586f91e5ae",
+    "salt": "29b7a918b99c795dafd29f831efd86f0",
+    "avatar": "G",
+    "avatarColor": "#4285f4",
+    "createdAt": "2026-11-25T01:05:33.053Z"
+  },
+  {
+    "id": "usr_1795568786291_001374af",
+    "name": "User Baru 1262",
+    "username": "user1262",
+    "email": "user1262@test.local",
+    "passwordHash": "f124547cf1127a64b85a332dd5402bccb2357639f3943e9793fd2823e8bf5dc95bf63d3855b6e0b4efd08c088d8ce6e5a1e4756aab0d559d86ebd0057552bda5",
+    "salt": "7b3e37546447d1833f7e5d51423f438b",
+    "avatar": "U",
+    "avatarColor": "#f29900",
+    "createdAt": "2026-11-25T01:06:26.292Z"
+  }
+]
