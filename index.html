@@ -1,0 +1,490 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Nano AI - Asisten kecerdasan buatan canggih untuk produktivitas tanpa batas">
+  <title>Nano AI</title>
+  <link rel="icon" href="/nova-logo.svg" type="image/svg+xml">
+  
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans + Material Symbols Rounded -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css?v=13.0">
+</head>
+<body>
+<div class="app-shell" id="appShell">
+  <!-- Backdrop for mobile drawer -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Gemini Collapsible Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-header">
+        <button id="sidebarToggleBtn" class="icon-btn" aria-label="Ciutkan menu" title="Ciutkan menu">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+        <a class="sidebar-brand" href="/" aria-label="Nano AI">
+          <img class="brand-sparkle" src="/nova-logo.svg" alt="Nano AI Logo">
+          <span class="brand-text">Nano</span>
+        </a>
+      </div>
+
+      <button class="new-chat-btn" id="newChat">
+        <span class="material-symbols-rounded">add</span>
+        <span>Chat baru</span>
+      </button>
+
+      <nav class="nav" aria-label="Navigasi tampilan">
+        <button class="nav-item active" data-view="chat">
+          <span class="material-symbols-rounded">chat</span>
+          <span>Percakapan</span>
+        </button>
+        <button class="nav-item" data-view="memory">
+          <span class="material-symbols-rounded">psychology</span>
+          <span>Memori AI</span>
+        </button>
+        <button class="nav-item" data-view="dashboard">
+          <span class="material-symbols-rounded">bar_chart</span>
+          <span>Dashboard</span>
+        </button>
+        <a href="/landing" class="nav-item landing-link" target="_blank" title="Lihat Website Landing Page">
+          <span class="material-symbols-rounded">rocket_launch</span>
+          <span>Landing Page</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Recent Chats Section -->
+    <div class="recent-section">
+      <div class="recent-header">
+        <span class="recent-title">Terkini</span>
+        <button id="clearHistory" class="clear-btn" title="Hapus semua riwayat">Hapus semua</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </div>
+
+    <!-- Sidebar Bottom Footer -->
+    <div class="sidebar-bottom">
+      <div class="connection-status">
+        <i id="statusDot"></i>
+        <span id="statusText">Memeriksa koneksi...</span>
+      </div>
+      <button id="settingsButton" class="bottom-action-btn">
+        <span class="material-symbols-rounded">settings</span>
+        <span>Setelan</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Work Area -->
+  <main class="main" id="mainContent">
+    <!-- Topbar Navigation -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="menuButton" class="icon-btn menu-btn" aria-label="Buka menu" title="Buka menu">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+        <div class="topbar-brand-pill">
+          <a class="topbar-brand" href="/" aria-label="Nano AI">
+            <img class="brand-sparkle" src="/nova-logo.svg" alt="Logo">
+            <span class="brand-title">Nano</span>
+          </a>
+          <div class="model-picker-wrap">
+            <select id="modelSelect" aria-label="Pilih model AI" title="Pilih model"></select>
+            <span class="material-symbols-rounded dropdown-icon">expand_more</span>
+          </div>
+        </div>
+        <div class="topbar-title-hidden"><span id="pageTitle">Chat</span></div>
+      </div>
+
+      <div class="topbar-right">
+        <a href="/landing" class="icon-btn" title="Lihat Landing Page" aria-label="Landing Page" target="_blank">
+          <span class="material-symbols-rounded">public</span>
+        </a>
+        <button id="exportChatBtn" class="icon-btn" title="Ekspor percakapan (Markdown)" aria-label="Ekspor chat">
+          <span class="material-symbols-rounded">download</span>
+        </button>
+        <button id="themeButton" class="icon-btn" title="Ganti tema (Gelap/Terang)" aria-label="Ganti tema">
+          <span class="material-symbols-rounded theme-icon">dark_mode</span>
+        </button>
+        <button id="topSettingsBtn" class="icon-btn" title="Setelan" aria-label="Setelan">
+          <span class="material-symbols-rounded">settings</span>
+        </button>
+        <!-- User Account Menu with Google-style Popover -->
+        <div class="user-account-wrap">
+          <button id="userAvatarBtn" class="user-avatar-btn" aria-label="Menu Akun Pengguna" title="Akun Pengguna">
+            <div id="userAvatar" class="user-avatar">
+              <span id="userInitial">G</span>
+            </div>
+          </button>
+
+          <!-- Google-Style Account Popover -->
+          <div id="accountPopover" class="account-popover hidden">
+            <div class="popover-header">
+              <div id="popoverAvatar" class="popover-avatar">
+                <span id="popoverInitial">G</span>
+              </div>
+              <div class="popover-user-info">
+                <h3 id="popoverUserName" class="popover-name">Tamu</h3>
+                <p id="popoverUserEmail" class="popover-email">Belum masuk</p>
+              </div>
+            </div>
+
+            <div class="popover-divider"></div>
+
+            <div class="popover-body">
+              <!-- State for Logged Out -->
+              <div id="loggedOutState" class="popover-state">
+                <p class="popover-hint">Masuk untuk menyimpan riwayat chat &amp; personalisasi memori ke akun Anda.</p>
+                <button id="openLoginBtn" class="popover-btn primary-popover-btn">
+                  <span class="material-symbols-rounded">login</span>
+                  <span>Masuk ke Akun</span>
+                </button>
+                <button id="openRegisterBtn" class="popover-btn secondary-popover-btn">
+                  <span class="material-symbols-rounded">person_add</span>
+                  <span>Daftar Akun Baru</span>
+                </button>
+              </div>
+
+              <!-- State for Logged In -->
+              <div id="loggedInState" class="popover-state hidden">
+                <div class="popover-stats">
+                  <div class="pstat">
+                    <span class="pstat-val" id="userChatCount">0</span>
+                    <span class="pstat-lbl">Chat</span>
+                  </div>
+                  <div class="pstat">
+                    <span class="pstat-val" id="userMemoryCount">0</span>
+                    <span class="pstat-lbl">Memori</span>
+                  </div>
+                  <div class="pstat">
+                    <span class="pstat-val text-green">Online</span>
+                    <span class="pstat-lbl">Status</span>
+                  </div>
+                </div>
+
+                <button id="accountSyncBtn" class="popover-menu-item">
+                  <span class="material-symbols-rounded">cloud_sync</span>
+                  <span>Sinkronkan Chat ke Cloud</span>
+                </button>
+                <button id="logoutBtn" class="popover-menu-item logout-item">
+                  <span class="material-symbols-rounded">logout</span>
+                  <span>Keluar (Logout)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Chat View -->
+    <section id="chatView" class="view chat-view">
+      <!-- Gemini Empty Welcome State -->
+      <div id="welcome" class="welcome">
+        <div class="gemini-welcome-container">
+          <div class="gemini-greeting">
+            <h1 class="greeting-title">
+              <span class="gemini-gradient">Halo,</span>
+            </h1>
+            <p class="greeting-subtitle">Ada yang bisa dibantu hari ini?</p>
+          </div>
+
+          <!-- Gemini Suggestion Cards -->
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Bantu cari ide kreatif buat proyek atau konten baru">
+              <p class="card-text">Bantu cari ide kreatif buat proyek atau konten baru</p>
+              <div class="card-icon">
+                <span class="material-symbols-rounded">auto_awesome</span>
+              </div>
+            </button>
+
+            <button class="suggestion" data-prompt="Jelaskan konsep ini dengan bahasa sederhana dan contoh nyata">
+              <p class="card-text">Jelaskan konsep ini dengan bahasa sederhana dan contoh nyata</p>
+              <div class="card-icon">
+                <span class="material-symbols-rounded">explore</span>
+              </div>
+            </button>
+
+            <button class="suggestion" data-prompt="Tulis kode program yang rapi, efisien, dan siap dipakai">
+              <p class="card-text">Tulis kode program yang rapi, efisien, dan siap dipakai</p>
+              <div class="card-icon">
+                <span class="material-symbols-rounded">code</span>
+              </div>
+            </button>
+
+            <button class="suggestion" data-prompt="Ringkas artikel atau dokumen panjang ini jadi poin-poin penting">
+              <p class="card-text">Ringkas artikel atau dokumen panjang ini jadi poin-poin penting</p>
+              <div class="card-icon">
+                <span class="material-symbols-rounded">draw</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Stream -->
+      <div id="messages" class="messages"></div>
+
+      <!-- Floating Gemini Composer Input -->
+      <div class="composer-wrap">
+        <div class="composer-container">
+          <div id="attachmentPreview" class="attachment-preview"></div>
+
+          <form id="chatForm" class="composer">
+            <div class="composer-input-row">
+              <textarea id="promptInput" rows="1" placeholder="Tanya apa saja atau diskusikan sesuatu..." autocomplete="off"></textarea>
+            </div>
+
+            <div class="composer-bottom">
+              <div class="composer-tools">
+                <label class="tool-btn" for="fileInput" title="Lampirkan dokumen atau file">
+                  <span class="material-symbols-rounded">add_circle</span>
+                  <span>File</span>
+                </label>
+                <input id="fileInput" type="file" hidden accept=".pdf,.docx,.txt,.md,.csv,.json,.js,.html,.css,.py,.xml,.log">
+
+                <label class="web-toggle-pill" title="Aktifkan pencarian Google Search">
+                  <input id="webSearch" type="checkbox">
+                  <span class="material-symbols-rounded pill-icon">travel_explore</span>
+                  <span>Cari web</span>
+                </label>
+
+                <button type="button" id="imageButton" class="tool-btn image-btn" title="Buat gambar dengan Nano AI">
+                  <span class="material-symbols-rounded">palette</span>
+                  <span>Buat gambar</span>
+                </button>
+              </div>
+
+              <div class="send-tools">
+                <button type="button" id="voiceButton" class="icon-tool-btn voice-btn" title="Dikte suara">
+                  <span class="material-symbols-rounded">mic</span>
+                </button>
+                <button id="sendButton" class="send-button" type="submit" aria-label="Kirim pesan" title="Kirim">
+                  <span class="material-symbols-rounded">arrow_upward</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <p class="disclaimer">Nano dapat membuat kesalahan. Periksa kembali informasi penting.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Memory View -->
+    <section id="memoryView" class="view other-view hidden">
+      <div class="section-head">
+        <span class="eyebrow">
+          <span class="material-symbols-rounded">psychology</span>
+          PERSONALISASI &amp; MEMORI
+        </span>
+        <h1>Memori AI <span>Nano</span></h1>
+        <p>Simpan preferensi dan informasi pribadi agar Nano memberikan jawaban yang lebih kontekstual dan relevan.</p>
+      </div>
+
+      <form id="memoryForm" class="memory-form">
+        <input id="memoryInput" placeholder="Contoh: Saya adalah software engineer yang sedang belajar TypeScript..." maxlength="5000">
+        <button type="submit" class="primary-btn">
+          <span class="material-symbols-rounded">add</span>
+          <span>Simpan memori</span>
+        </button>
+      </form>
+
+      <div id="memoryList" class="memory-list"></div>
+    </section>
+
+    <!-- Dashboard View -->
+    <section id="dashboardView" class="view other-view hidden">
+      <div class="section-head">
+        <span class="eyebrow">
+          <span class="material-symbols-rounded">bar_chart</span>
+          RINGKASAN AKTIVITAS
+        </span>
+        <h1>Dashboard <span>Nano</span></h1>
+        <p>Pantau status API Nano AI dan riwayat penggunaan aplikasi Anda.</p>
+      </div>
+
+      <div id="statsGrid" class="stats-grid"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="material-symbols-rounded">smart_toy</span>
+          <h3>Model AI yang Tersedia</h3>
+        </div>
+        <div id="dashboardModels" class="models-chips-wrap"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Toast Snackbar -->
+<div id="toast" class="toast"></div>
+
+<!-- Settings Modal -->
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span class="eyebrow">PREFERENSI SISTEM</span>
+        <h2>Setelan Nano AI</h2>
+      </div>
+      <button id="closeModal" class="modal-close" aria-label="Tutup">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-desc">Model dan konfigurasi utama diatur melalui file <code>.env</code> pada folder project.</p>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Model aktif</strong>
+          <span>Model AI yang digunakan saat ini</span>
+        </div>
+        <div class="setting-value"><strong id="currentModel">-</strong></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Pencarian web</strong>
+          <span>Didukung Google Search Grounding</span>
+        </div>
+        <div class="setting-value"><span>Aktifkan via tombol Cari Web</span></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Tema tampilan</strong>
+          <span>Mode Terang &amp; Gelap</span>
+        </div>
+        <div class="setting-value"><span>Gunakan tombol tema di kanan atas</span></div>
+      </div>
+
+      <div class="setting-note">
+        <span class="material-symbols-rounded">lock</span>
+        <p>API key Anda tersimpan aman di server lokal dan tidak pernah dibagikan ke browser publik.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Lightbox Modal -->
+<div id="imageModal" class="modal hidden">
+  <div class="image-modal-card">
+    <button id="closeImageModal" class="modal-close" aria-label="Tutup"><span class="material-symbols-rounded">close</span></button>
+    <img id="lightboxImg" src="" alt="Pratinjau Gambar">
+    <div class="image-modal-footer">
+      <a id="downloadImgBtn" href="#" download="nano-ai-image.png" class="primary-btn">
+        <span class="material-symbols-rounded">download</span>
+        <span>Unduh Gambar</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Auth Modal (Login / Register) -->
+<div id="authModal" class="modal hidden">
+  <div class="auth-modal-card">
+    <div class="auth-modal-header">
+      <div class="auth-brand">
+        <img src="/nova-logo.svg" alt="Nano AI Logo" class="auth-brand-logo">
+        <h2>Akun Nano AI</h2>
+      </div>
+      <button id="closeAuthModal" class="modal-close" aria-label="Tutup"><span class="material-symbols-rounded">close</span></button>
+    </div>
+
+    <!-- Tabs: Masuk / Daftar -->
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab active" data-tab="loginTab">Masuk</button>
+      <button class="auth-tab" data-tab="registerTab">Daftar Akun</button>
+    </div>
+
+    <!-- Feedback Banner -->
+    <div id="authFeedback" class="auth-feedback hidden"></div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="auth-form-view active">
+      <div class="form-group">
+        <label for="loginIdentifier">Username atau Email</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">account_circle</span>
+          <input type="text" id="loginIdentifier" placeholder="Contoh: demo atau nama@email.com" required autocomplete="username">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">lock</span>
+          <input type="password" id="loginPassword" placeholder="Masukkan password Anda" required autocomplete="current-password">
+          <button type="button" class="toggle-password-btn" id="toggleLoginPwd" title="Lihat password">
+            <span class="material-symbols-rounded">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="loginSubmitBtn" class="primary-btn auth-submit-btn">
+        <span class="material-symbols-rounded">login</span>
+        <span>Masuk Sekarang</span>
+      </button>
+
+      <div class="auth-divider">
+        <span>atau uji coba instan</span>
+      </div>
+
+      <button type="button" id="oneClickDemoBtn" class="secondary-btn auth-demo-btn" title="Login otomatis dengan akun Demo siap pakai">
+        <span class="material-symbols-rounded">bolt</span>
+        <span>Masuk Instan dengan Akun Demo</span>
+      </button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="auth-form-view hidden">
+      <div class="form-group">
+        <label for="regName">Nama Lengkap</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">badge</span>
+          <input type="text" id="regName" placeholder="Contoh: Budi Santoso" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regUsername">Username</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">alternate_email</span>
+          <input type="text" id="regUsername" placeholder="Contoh: budi123 (min 3 huruf)" required autocomplete="username">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Alamat Email</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">mail</span>
+          <input type="email" id="regEmail" placeholder="nama@domain.com" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Password (Minimal 6 karakter)</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-rounded input-icon">lock</span>
+          <input type="password" id="regPassword" placeholder="Minimal 6 karakter" required autocomplete="new-password">
+        </div>
+      </div>
+
+      <button type="submit" id="registerSubmitBtn" class="primary-btn auth-submit-btn">
+        <span class="material-symbols-rounded">person_add</span>
+        <span>Buat Akun Baru</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/app.js?v=13.0"></script>
+</body>
+</html>
+
